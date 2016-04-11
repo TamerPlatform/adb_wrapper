@@ -3,37 +3,48 @@ OLD_PATH=$PATH
 export PATH=`echo $PATH|cut -f2- -d":"`
 ADB_BIN=`which adb`
 export PATH=$OLD_PATH
-echo $ADB_BIN
+echo "$ADB_BIN"
 IFS=$'\n'
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 NORMAL=$(tput sgr0)
 ADB_LIST="$HOME/.adb_list"
-$ADB_BIN start-server
+"$ADB_BIN" start-server
 if [[ $1 == -* ]]
 then
-	$ADB_BIN $*
+	"$ADB_BIN" $*
 else
 
 	if [ $1 == "devices" ]
 	then
-		$ADB_BIN devices -l
+		"$ADB_BIN" devices -l
+	elif [ $1 == "screenshot" -o $2 == "screenshot" ]
+	then
+		NM=$2
+		DEV=""
+		if [ $NM == "screenshot" ]
+		then
+			DEV=$1
+			NM=$3
+		fi
+		if [ -f $NM ]
+		then
+			echo "Already exists"
+			read -p "press enter to overwrite or ^C to close" ENT 
+		fi
+		adb $DEV shell screencap -p | perl -pe 's/\x0D\x0A/\x0A/g' > $NM
 	elif [ $1 == "list" ]
 	then
 		if [ -f $ADB_LIST ]
 		then
 			printf '%-15s : %-10s : %-20s \n' $GREEN"ADB Status" "DeviceName" "Device SerialNo"$NORMAL;
-			#cat ~/.adb_list
-			# should actually print all devices name and serial number along with current status
 			while read p;
 			do
 				OIFS=$IFS
 				IFS=';'
 				arr=( $p )
-		  		#echo ${arr[1]}
 		  		IFS=$OIFS
-		  		adb_status=`$ADB_BIN -s ${arr[1]} get-state`
-		  		#echo $adb_status ":" ${arr[0]} " : " ${arr[1]}
+		  		adb_status=`"$ADB_BIN" -s ${arr[1]} get-state`
 		  		if [ $adb_status == "unknown" ]
 		  		then
 		  			printf '%-15s : %-10s : %-20s \n' "$RED$adb_status" ${arr[0]} "${arr[1]}$NORMAL";
