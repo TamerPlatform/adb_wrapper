@@ -10,19 +10,19 @@ GREEN=$(tput setaf 2)
 NORMAL=$(tput sgr0)
 ADB_LIST="$HOME/.adb_list"
 "$ADB_BIN" start-server
-if [[ $1 == -* ]]
+if [[ "$1" == -* ]]
 then
 	"$ADB_BIN" $*
 else
 
-	if [ $1 == "devices" ]
+	if [ "$1" == "devices" ]
 	then
 		"$ADB_BIN" devices -l
-	elif [ $1 == "screenshot" -o $2 == "screenshot" ]
+	elif [ "$1" == "screenshot" -o "$2" == "screenshot" ]
 	then
 		NM=$2
 		DEV=""
-		if [ $NM == "screenshot" ]
+		if [ "$NM" == "screenshot" ]
 		then
 			DEV=$1
 			NM=$3
@@ -33,7 +33,7 @@ else
 			read -p "press enter to overwrite or ^C to close" ENT 
 		fi
 		adb $DEV shell screencap -p | perl -pe 's/\x0D\x0A/\x0A/g' > $NM
-	elif [ $1 == "list" ]
+	elif [ "$1" == "list" ]
 	then
 		if [ -f $ADB_LIST ]
 		then
