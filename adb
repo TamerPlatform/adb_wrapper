@@ -3,7 +3,6 @@ OLD_PATH=$PATH
 export PATH=`echo $PATH|cut -f2- -d":"`
 ADB_BIN=`which adb`
 export PATH=$OLD_PATH
-echo "$ADB_BIN"
 IFS=$'\n'
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
