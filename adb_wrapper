@@ -1,6 +1,6 @@
 #!/bin/bash
 OLD_PATH=$PATH 
-export PATH=`echo $PATH|cut -f2- -d":"`
+export PATH=`echo $PATH|sed 's/\/usr\/local\/bin//g'`
 ADB_BIN=`which adb`
 export PATH=$OLD_PATH
 IFS=$'\n'
